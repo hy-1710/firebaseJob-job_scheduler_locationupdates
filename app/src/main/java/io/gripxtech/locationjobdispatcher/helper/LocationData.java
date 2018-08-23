@@ -2,35 +2,45 @@ package io.gripxtech.locationjobdispatcher.helper;
 
 import android.util.Log;
 
+import com.google.gson.annotations.SerializedName;
+
+
 public class LocationData {
 
-    public static final String TABLE_NAME = "tblLocation";
+    public static final String TABLE_NAME = "Tracklog";
 
-    public static final String LOCATION_ID = "locationId";
-    public static final String USERID = "userId";
-    public static final String LATITUDE = "latitude";
-    public static final String LONGITUDE = "longitude";
+    public static final String TRACKLOG_ID = "TracklogId";
+    public static final String USERID = "UserId";
+    public static final String LATITUDE = "Latitude";
+    public static final String LONGITUDE = "Longitude";
+    public static final String FLAG = "flag";
     // public static final String TIME = "time";
-    public static final String COLUMN_TIMESTAMP = "timeStamp";
+    public static final String COLUMN_CREATEON = "CreatedOn";
     public static final String TAG = LocationData.class.getSimpleName();
     // Create table SQL query
     public static final String CREATE_TABLE =
             "CREATE TABLE " + TABLE_NAME + "("
-                    + LOCATION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                    + TRACKLOG_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                     + USERID + " INTEGER,"
                     + LATITUDE + " REAL,"
                     + LONGITUDE + " REAL,"
-                    + COLUMN_TIMESTAMP + " DATETIME DEFAULT CURRENT_TIMESTAMP"
+                    + COLUMN_CREATEON + " DATETIME DEFAULT CURRENT_TIMESTAMP"
                     + ")";
+
+
+    @SerializedName("TracklogId")
     private int locationid;
+
+    @SerializedName("UserId")
     private int userId;
+    @SerializedName("")
     private double latitude;
     private double longitude;
     private String timestamp;
 
 
-    public LocationData(int locationd, int userId, double latitude, double longitude, String timestamp) {
-        this.locationid = locationid;
+    public LocationData(int userId, double latitude, double longitude, String timestamp) {
+
         this.userId = userId;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -81,5 +91,18 @@ public class LocationData {
 
     public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
+    }
+
+    @Override
+    public String toString() {
+        return "Tracklog{" +
+                //  "TracklogId='" + locationid + '\'' +
+                ", UserId='" + userId + '\'' +
+                ", Latitude=" + latitude + '\'' +
+                ", Longitude=" + longitude + '\'' +
+                ", CreatedOn=" + timestamp + '\'' +
+
+
+                '}';
     }
 }

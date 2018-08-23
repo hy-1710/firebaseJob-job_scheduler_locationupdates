@@ -119,7 +119,7 @@ public class AppPrefs extends BasePrefs {
     }
 
     public void setLongitude(double Longitude) {
-        putString(latitude, String.valueOf(Longitude));
+        putString(longitude, String.valueOf(Longitude));
     }
 
 
