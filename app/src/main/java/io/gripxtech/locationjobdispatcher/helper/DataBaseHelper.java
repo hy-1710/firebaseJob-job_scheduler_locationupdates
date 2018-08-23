@@ -197,7 +197,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 LocationData locationData = new LocationData();
-                locationData.setLocationid(cursor.getInt(cursor.getColumnIndex(LocationData.TRACKLOG_ID)));
+                // locationData.setLocationid(cursor.getInt(cursor.getColumnIndex(LocationData.TRACKLOG_ID)));
                 locationData.setUserid(cursor.getInt(cursor.getColumnIndex(LocationData.USERID)));
                 locationData.setLatitude(cursor.getDouble(cursor.getColumnIndex(LocationData.LATITUDE)));
                 locationData.setLongitude(cursor.getDouble(cursor.getColumnIndex(LocationData.LONGITUDE)));
@@ -231,6 +231,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public List<LocationData> getFromAllLocation(int fromId) {
         List<LocationData> notes = new ArrayList<>();
 
+
+        Log.e(TAG, "getFromAllLocation: " + fromId);
         // Select All Query
         String selectQuery = "SELECT  * FROM " + LocationData.TABLE_NAME + " WHERE " + LocationData.TRACKLOG_ID +
                 " > " + fromId;
@@ -247,7 +249,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 LocationData locationData = new LocationData();
-                locationData.setLocationid(cursor.getInt(cursor.getColumnIndex(LocationData.TRACKLOG_ID)));
+                //   locationData.setLocationid(cursor.getInt(cursor.getColumnIndex(LocationData.TRACKLOG_ID)));
                 locationData.setUserid(cursor.getInt(cursor.getColumnIndex(LocationData.USERID)));
                 locationData.setLatitude(cursor.getDouble(cursor.getColumnIndex(LocationData.LATITUDE)));
                 locationData.setLongitude(cursor.getDouble(cursor.getColumnIndex(LocationData.LONGITUDE)));
@@ -261,6 +263,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.close();
 
         // return notes list
+
+        Log.e(TAG, "getFromAllLocation: returns recorcs Sizes :" + notes.size());
         return notes;
     }
 
@@ -277,7 +281,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return count;
     }
 
-    public int updateLatitude(LocationData locationData) {
+ /*   public int updateLatitude(LocationData locationData) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -295,6 +299,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.delete(LocationData.TABLE_NAME, LocationData.TRACKLOG_ID + " = ?",
                 new String[]{String.valueOf(locationData.getLocationid())});
         db.close();
-    }
+    }*/
 
 }

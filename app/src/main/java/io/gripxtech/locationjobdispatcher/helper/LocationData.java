@@ -28,14 +28,16 @@ public class LocationData {
                     + ")";
 
 
-    @SerializedName("TracklogId")
-    private int locationid;
+    // private int locationid;
 
     @SerializedName("UserId")
     private int userId;
-    @SerializedName("")
+    @SerializedName("Latitude")
     private double latitude;
+    @SerializedName("Longitude")
     private double longitude;
+
+    @SerializedName("CreatedOn")
     private String timestamp;
 
 
@@ -53,13 +55,13 @@ public class LocationData {
     }
 
 
-    public int getLocationid() {
+  /*public int getLocationid() {
         return locationid;
     }
 
-    public void setLocationid(int locationid) {
+     public void setLocationid(int locationid) {
         this.locationid = locationid;
-    }
+    }*/
 
     public int getUserid() {
         return userId;
@@ -97,7 +99,7 @@ public class LocationData {
     public String toString() {
         return "Tracklog{" +
                 //  "TracklogId='" + locationid + '\'' +
-                ", UserId='" + userId + '\'' +
+                " UserId='" + userId + '\'' +
                 ", Latitude=" + latitude + '\'' +
                 ", Longitude=" + longitude + '\'' +
                 ", CreatedOn=" + timestamp + '\'' +

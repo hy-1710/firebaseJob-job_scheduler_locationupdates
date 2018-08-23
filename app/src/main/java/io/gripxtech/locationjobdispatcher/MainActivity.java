@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
                 .setRecurring(true)
 
                 // Run between 10 - 12 minutes from now.
-                .setTrigger(Trigger.executionWindow(5 * 60, 7 * 60))
+                .setTrigger(Trigger.executionWindow(7 * 60, 9 * 60))
                 //.setTrigger(Trigger.executionWindow(30, 60))
 
                 // retry with exponential backoff
@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
                 .setRecurring(true)
 
                 // Run between 10 - 12 minutes from now.
-                .setTrigger(Trigger.executionWindow(10 * 60, 12 * 60))
+                .setTrigger(Trigger.executionWindow(5 * 60, 7 * 60))
                 //.setTrigger(Trigger.executionWindow(30, 60))
 
                 // retry with exponential backoff

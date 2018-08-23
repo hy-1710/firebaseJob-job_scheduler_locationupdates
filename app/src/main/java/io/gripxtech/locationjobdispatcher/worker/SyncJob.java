@@ -18,6 +18,9 @@ import io.gripxtech.locationjobdispatcher.helper.DataBaseHelper;
 import io.gripxtech.locationjobdispatcher.helper.LocationData;
 import io.gripxtech.locationjobdispatcher.helper.SyncData;
 import io.gripxtech.locationjobdispatcher.prefs.AppPrefs;
+import io.gripxtech.locationjobdispatcher.webservice.request.RequestBody;
+import io.gripxtech.locationjobdispatcher.webservice.request.RequestEnvelope;
+import io.gripxtech.locationjobdispatcher.webservice.request.RequestModel;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -31,11 +34,18 @@ import timber.log.Timber;
 public class SyncJob extends JobService {
 
     public static final String TAG = "worker.SyncJob";
+
+    private static final String SOAP_ACTION = "http://tempuri.org/SyncTracklog";
+    private static final String METHOD_NAME = "Tracklog";
+    private static final String NAMESPACE = "http://www.w3schools.com/webservices/";
+
+
     DataBaseHelper db;
     LocationData locationData;
     LocationData lastLocationData;
     SyncData syncData;
 
+    //main data list for sync Data
     List<LocationData> locatiobDataList = new ArrayList<>();
     AppPrefs appPrefs;
     int countData;
@@ -83,16 +93,12 @@ public class SyncJob extends JobService {
                 appPrefs = new AppPrefs(SyncJob.this);
                 locationData = new LocationData();
 
-                lastLocationData = new LocationData();
-
-
-                getCurrentTimeUsingDate();
-                // getCurrentTimeUsingCalendar();
-
 
                 //case 1: last data size 0 and db has data then select * from table
                 //case 2: last data size > 0 and db have more then data then send the records
                 // case 3 : last data size = db.data
+
+                //when there is no data in db then stop the service
 
 
                 int count = db.getNotesCount();
@@ -110,6 +116,7 @@ public class SyncJob extends JobService {
                         //locatiobDataList = db.getAllLocation();
                         Log.e(TAG, "call: appPrefs.getLocationId() = 0 and Inside If");
 
+                        lastLocationData = new LocationData();
 
                         //so add all data into list from localdb
                         locatiobDataList.addAll(db.getAllLocation());
@@ -121,16 +128,14 @@ public class SyncJob extends JobService {
 
                         //insert last record of arrayList in sync table for future reference
 
-                        long id = db.insertSyncData(lastLocationData.getLocationid(), lastLocationData.getUserid(),
-                                locatiobDataList.size(), getCurrentTimeUsingDate());
+                      /*  long id = db.insertSyncData(lastLocationData.getLocationid(), lastLocationData.getUserid(),
+                                locatiobDataList.size(), getCurrentTimeUsingDate());*/
 
 
-                        Log.e(TAG, "call: SYNCID ----" + id);
-
-                        Log.e(TAG, "call: LAT CHECKING VALUE :----" + lastLocationData.getLatitude());
+                        //   Log.e(TAG, "call: SYNCID ----" + id);
 
 
-                        appPrefs.setLocationId(lastLocationData.getLocationid());
+                        //  appPrefs.setLocationId(lastLocationData.getLocationid());
                         appPrefs.setEmployeeId(1);
                         appPrefs.setLatitude(lastLocationData.getLatitude());
                         appPrefs.setLongitude(lastLocationData.getLongitude());
@@ -148,19 +153,28 @@ public class SyncJob extends JobService {
                         Log.e(TAG, "call: appPrefs.getLocationId() > 0 and Inside If");
                         // few records has been sent
                         int lastLocationId = appPrefs.getLocationId();
+                        Log.e(TAG, "call: sending location ID is :" + lastLocationId);
+                        lastLocationData = new LocationData();
                         locatiobDataList.addAll(db.getFromAllLocation(lastLocationId));
-                        lastLocationData = locatiobDataList.get(locatiobDataList.size() - 1);
+
                         Log.e(TAG, "call: locationDataList size :" + locatiobDataList.size());
+
+                        if (locatiobDataList.size() > 0) {
+                            //arryIndexBound exception
+                            lastLocationData = locatiobDataList.get(locatiobDataList.size() - 1);
+
+                        }
+
                         Log.e(TAG, "call: value of lastLocationData :" + lastLocationData);
-
+/*
                         long id = db.insertSyncData(lastLocationData.getLocationid(), lastLocationData.getUserid(),
-                                locatiobDataList.size(), getCurrentTimeUsingDate());
+                                locatiobDataList.size(), getCurrentTimeUsingDate());*/
 
-                        Log.e(TAG, "call: SYNCID ----" + id);
+                        //   Log.e(TAG, "call: SYNCID ----" + id);
                         Log.e(TAG, "call: LAT CHECKING VALUE :----" + lastLocationData.getLatitude());
 
 
-                        appPrefs.setLocationId(lastLocationData.getLocationid());
+                        // appPrefs.setLocationId(lastLocationData.getLocationid());
                         appPrefs.setEmployeeId(lastLocationData.getUserid());
                         appPrefs.setLatitude(lastLocationData.getLatitude());
                         appPrefs.setLongitude(lastLocationData.getLongitude());
@@ -175,6 +189,7 @@ public class SyncJob extends JobService {
                         //do nothing
 
                         Log.e(TAG, "call: NO RECORDS INSOIDE DB :");
+                        jobFinished(job, true);
                     }
 
 
@@ -288,37 +303,30 @@ public class SyncJob extends JobService {
     private void sendPost(final List<LocationData> locatiobDataList, final JobParameters job) {
         Log.e(TAG, "sendPost: CALLED locatiobDataList------" + locatiobDataList.size());
 
-      /*  mAPIService.savePost(locatiobDataList).enqueue(new Callback<List<LocationData>>() {
-            @Override
-            public void onResponse(Call<List<LocationData>> call, Response<List<LocationData>> response) {
-                Log.e(TAG, "onResponse: INSIDE .....");
-
-                if (response.isSuccessful()) {
-                    showResponse(response.body().toString());
-                    Log.i(TAG, "post submitted to API." + response.body().toString());
-                    Log.e(TAG, "onResponse: INSIDE IF" );
-
-                    jobFinished(job, true);
-                }
-                Log.e(TAG, "onResponse: OUTSIDE IF" );
-
-            }
-
-            @Override
-            public void onFailure(Call<List<LocationData>> call, Throwable t) {
-
-                Log.e(TAG, "Unable to submit post to API.");
-                jobFinished(job, true);
-                Log.e(TAG, "onFailure: CALLED" );
-
-            }
-        });*/
 
         if (locatiobDataList.size() > 0) {
-            mAPIService.getTrackLogList(locatiobDataList).enqueue(new Callback<List<LocationData>>() {
+
+            Log.e(TAG, "sendPost: CHECK Size of Data list for service call---" + locatiobDataList);
+            Log.e(TAG, "sendPost: CHEck DATA ---- " + locatiobDataList);
+
+            RequestEnvelope requestEnvelop = new RequestEnvelope();
+            RequestBody requestBody = new RequestBody();
+            RequestModel requestModel = new RequestModel();
+            requestModel.locationData = locatiobDataList;
+            requestModel.cityNameAttribute = "http://tempuri.org/";
+            requestBody.getWeatherbyCityName = requestModel;
+            requestEnvelop.body = requestBody;
+
+            mAPIService.getTrackLogList(requestBody).enqueue(new Callback<List<LocationData>>() {
+
                 @Override
                 public void onResponse(Call<List<LocationData>> call, Response<List<LocationData>> response) {
-                    Log.e(TAG, "onResponse: CALLED----" + response.body().toString());
+                    Log.e(TAG, "onResponse: " + response.body());
+                    //   Log.e(TAG, "onResponse: CALLED----" + response.body().toString());
+
+                    if (response.isSuccessful()) {
+
+                    }
                 }
 
                 @Override
@@ -334,4 +342,48 @@ public class SyncJob extends JobService {
 
     }
 
+    private void xmlserviceCall() {
+        /*String URL = "http://dsl.gipl.net/gsplvtsmobile.asmx";
+
+        SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+        request.addProperty("TrackLog", locatiobDataList); // adding method property here serially
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+        envelope.implicitTypes = true;
+        envelope.setOutputSoapObject(request);
+        envelope.dotNet = true;
+
+        HttpTransportSE httpTransport = new HttpTransportSE(URL);
+        httpTransport.debug = true;
+
+        try {
+            httpTransport.call(SOAP_ACTION, envelope);
+        } catch (HttpResponseException e) {
+            // TODO Auto-generated catch block
+            Log.e("HTTPLOG", e.getMessage());
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            Log.e("IOLOG", e.getMessage());
+            e.printStackTrace();
+        } catch (XmlPullParserException e) {
+            // TODO Auto-generated catch block
+            Log.e("XMLLOG", e.getMessage());
+            e.printStackTrace();
+        } //send request
+
+        Object result = null;
+        try {
+            result = (Object) envelope.getResponse();
+            Log.i("RESPONSE", String.valueOf(result)); // see output in the console
+        } catch (SoapFault e) {
+            // TODO Auto-generated catch block
+            Log.e("SOAPLOG", e.getMessage());
+            e.printStackTrace();*/
+
+        // return null;
+    }
+
+
 }
+
