@@ -116,7 +116,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         values.put(SyncData.LAST_TRACKLOG_ID, lastLocationId);
         values.put(SyncData.USERID, userId);
         values.put(SyncData.TOTAL_SYNCRECORD, totalSyncRecordSize);
-        values.put(LocationData.COLUMN_CREATEON, mLastUpdateTime);
+        values.put(LocationData.COLUMN_CREATEON, createdOn);
 
         Log.e(TAG, "insertNote:  TABLE NAME : " + SyncData.CREATE_TABLE);
 
@@ -145,7 +145,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         // prepare note object
         LocationData location = new LocationData(
-                //cursor.getInt(cursor.getColumnIndex(LocationData.TRACKLOG_ID)),
+                cursor.getInt(cursor.getColumnIndex(LocationData.TRACKLOG_ID)),
                 cursor.getInt(cursor.getColumnIndex(LocationData.USERID)),
                 cursor.getDouble(cursor.getColumnIndex(LocationData.LATITUDE)),
                 cursor.getDouble(cursor.getColumnIndex(LocationData.LONGITUDE)),
@@ -197,7 +197,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 LocationData locationData = new LocationData();
-                // locationData.setLocationid(cursor.getInt(cursor.getColumnIndex(LocationData.TRACKLOG_ID)));
+                locationData.setLocationid(cursor.getInt(cursor.getColumnIndex(LocationData.TRACKLOG_ID)));
                 locationData.setUserid(cursor.getInt(cursor.getColumnIndex(LocationData.USERID)));
                 locationData.setLatitude(cursor.getDouble(cursor.getColumnIndex(LocationData.LATITUDE)));
                 locationData.setLongitude(cursor.getDouble(cursor.getColumnIndex(LocationData.LONGITUDE)));
@@ -249,7 +249,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 LocationData locationData = new LocationData();
-                //   locationData.setLocationid(cursor.getInt(cursor.getColumnIndex(LocationData.TRACKLOG_ID)));
+                locationData.setLocationid(cursor.getInt(cursor.getColumnIndex(LocationData.TRACKLOG_ID)));
                 locationData.setUserid(cursor.getInt(cursor.getColumnIndex(LocationData.USERID)));
                 locationData.setLatitude(cursor.getDouble(cursor.getColumnIndex(LocationData.LATITUDE)));
                 locationData.setLongitude(cursor.getDouble(cursor.getColumnIndex(LocationData.LONGITUDE)));

@@ -12,22 +12,16 @@ public interface APIService {
 
   @Headers({
 
-          "SOAPAction : http://tempuri.org/SyncTracklog",
-          "Content-Type: text/xml; charset=UTF-8",
+          //  "soapaction : http://tempuri.org/SyncTracklog",
+          "content-type: text/json; charset=UTF-8",
           // "Accept-Charset: utf-8"
   })
 
-  @POST("/gsplvtsmobile.asmx")
-    // @POST(" /gsplvtsmobile.asmx")
-//  Call<List<LocationData>> getTrackLogList(@Body String checking);
+  @POST("/gsplvtsmobile.asmx/SyncTrackLog")
+
+
     // Call<List<LocationData>> getTrackLogList(@Body List<LocationData> trackLogList);
   Call<List<LocationData>> getTrackLogList(@Body RequestBody requestBody);
-  // public ResponseEnvelope uploadRequest(@Body RequestEnvelope body);
 
-
-  // Call<List<LocationData>> getTrackLogList(@Body List<LocationData> trackLogList );
-  // Call<List<LocationData>> savePost(List<LocationData> locatiobDataList);
-
-  // if this wont work then check headers value
 
 }

@@ -28,7 +28,7 @@ public class LocationData {
                     + ")";
 
 
-    // private int locationid;
+    private int locationid;
 
     @SerializedName("UserId")
     private int userId;
@@ -41,8 +41,9 @@ public class LocationData {
     private String timestamp;
 
 
-    public LocationData(int userId, double latitude, double longitude, String timestamp) {
+    public LocationData(int locationid, int userId, double latitude, double longitude, String timestamp) {
 
+        this.locationid = locationid;
         this.userId = userId;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -55,13 +56,13 @@ public class LocationData {
     }
 
 
-  /*public int getLocationid() {
+    public int getLocationid() {
         return locationid;
     }
 
      public void setLocationid(int locationid) {
         this.locationid = locationid;
-    }*/
+     }
 
     public int getUserid() {
         return userId;
